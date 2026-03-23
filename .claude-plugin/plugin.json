@@ -1,0 +1,11 @@
+{
+  "name": "agentic-dev",
+  "version": "1.0.0",
+  "description": "Full product development lifecycle as autonomous AI agents. Mirrors your existing team process — business analysis through deployment — with review gates at every step and Linear as the backbone.",
+  "author": {
+    "name": "Your Engineering Team",
+    "url": "https://github.com/your-org/agentic-dev"
+  },
+  "keywords": ["agents", "linear", "spec-driven", "autonomous", "product-development"],
+  "license": "MIT"
+}
