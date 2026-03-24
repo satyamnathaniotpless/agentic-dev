@@ -1,0 +1,14 @@
+{
+  "_comment": "Add this to your PROJECT's .claude/settings.json to auto-enable the marketplace for your team",
+  "extraKnownMarketplaces": {
+    "agentic-dev": {
+      "source": {
+        "source": "github",
+        "repo": "your-org/agentic-dev"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "agentic-dev@agentic-dev": true
+  }
+}

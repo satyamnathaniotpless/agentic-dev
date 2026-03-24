@@ -1,0 +1,12 @@
+{
+  "name": "agentic-dev",
+  "description": "Full product development lifecycle as autonomous AI agents. 31 specialized agents mirror your existing team process — business analysis through deployment — with review gates at every step and Linear as the backbone.",
+  "author": {
+    "name": "Your Engineering Team",
+    "email": "engineering@your-org.com"
+  },
+  "homepage": "https://github.com/your-org/agentic-dev",
+  "repository": "https://github.com/your-org/agentic-dev",
+  "license": "MIT",
+  "keywords": ["agents", "linear", "spec-driven", "autonomous", "product-development", "lifecycle"]
+}

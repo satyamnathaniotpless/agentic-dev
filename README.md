@@ -1,56 +1,87 @@
 # agentic-dev
 
 > Full product development lifecycle as autonomous AI agents.  
-> 31 specialized agents · 7 skills · 6 slash commands · 2 hooks · MCP server
+> 31 agents · 7 skills · 6 slash commands · 2 hooks · MCP server with 6 tools
 
 ---
 
 ## What it does
 
-Drop a Linear issue ID and say `run-pipeline ENG-42`. The plugin kicks off a
-7-phase autonomous pipeline that mirrors your existing team process:
+Say `/agentic-dev:run-pipeline ENG-42`. A 7-phase autonomous pipeline runs:
 
 ```
 1. Business Analysis   → Business Analyst + Stakeholder Clarifier + Feasibility Assessor
 2. Discovery           → 5 Research Agents (parallel)
-3. Design & Planning   → PM Agent + PRD Reviewer + UX Spec Agent + Architecture Reviewer
+3. Design & Planning   → PM Agent + PRD Reviewer + UX Spec + Architecture Reviewer
 4. Decomposition       → Lead Engineer + Database Architect + API Contract Agent
 5. Implementation      → 6 Workers in isolated git worktrees (parallel)
 6. Validation          → Code Review + Security Review + QA + Performance Test
 7. Release & Ops       → Release Manager + Deployment + Smoke Test + Rollback
 ```
 
-Every phase transition posts a structured comment to Linear. The thread of a single
-issue is the complete audit trail from business requirement to deployed feature.
+Every phase posts a structured comment to Linear. The issue thread is the complete
+audit trail from business requirement to deployed feature.
 
 ---
 
 ## Prerequisites
 
-1. **Claude Code** v1.0.33 or later — `claude --version`
-2. **Node.js** v18 or later (for the MCP server)
+1. **Claude Code** v1.0.33+ — `claude --version`
+2. **Node.js** v18+ (for the MCP server)
 3. **CLAUDE.md** in your project root — copy from `templates/CLAUDE.md` and fill in every section
-4. **Linear** configured — team, statuses, all required labels (see `templates/CLAUDE.md` for full list)
+4. **Linear** configured — team key, all statuses, all required labels (see README section below)
 
 ---
 
 ## Installation
 
-### Local development / testing
+### Test locally (development)
 ```bash
-claude --plugin-dir ./agentic-dev
+claude --plugin-dir ./plugins/agentic-dev
 ```
 
-### Install to project (shared with team via .claude/settings.json)
+### Add the marketplace (one-time per machine)
 ```bash
-# After pushing to GitHub:
-/plugin install agentic-dev@your-org
+# In Claude Code:
+/plugin marketplace add your-org/agentic-dev
 ```
 
-### Install with scope
+### Install the plugin
 ```bash
-claude plugin install agentic-dev@your-org --scope project   # team-shared
-claude plugin install agentic-dev@your-org --scope user      # personal, all projects
+/plugin install agentic-dev@agentic-dev
+```
+
+### For teams — add to your project's `.claude/settings.json`
+```json
+{
+  "extraKnownMarketplaces": {
+    "agentic-dev": {
+      "source": {
+        "source": "github",
+        "repo": "your-org/agentic-dev"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "agentic-dev@agentic-dev": true
+  }
+}
+```
+Team members are prompted to install when they trust the project folder.
+
+See `docs/team-settings-example.json` for the full settings template.
+
+---
+
+## Validation
+
+Before use, validate the plugin structure:
+```bash
+# From the repo root:
+claude plugin validate .
+
+# Or from within Claude Code:
+/plugin validate .
 ```
 
 ---
@@ -62,18 +93,18 @@ claude plugin install agentic-dev@your-org --scope user      # personal, all pro
 | `/agentic-dev:run-pipeline [ISSUE-ID]` | Run the full pipeline on a Linear issue |
 | `/agentic-dev:write-spec [ISSUE-ID]` | Write a complete 7-section Feature Spec |
 | `/agentic-dev:decompose-issue [ISSUE-ID]` | Decompose an issue into Task Spec sub-issues |
-| `/agentic-dev:review-pr [PR-URL or #N]` | Run code + security review on a PR |
+| `/agentic-dev:review-pr [PR]` | Run code + security review on a pull request |
 | `/agentic-dev:validate-spec [ISSUE-ID]` | Validate a Feature or Task Spec |
 | `/agentic-dev:run-retrospective [period]` | Run sprint retrospective analysis |
 
 ---
 
-## Skills (auto-activated by Claude)
+## Skills (auto-invoked by Claude)
 
 | Skill | Activates When |
 |---|---|
-| `agentic-dev:confidence-protocol` | Any agent's confidence drops below 70% |
-| `agentic-dev:feature-spec` | Writing, reviewing, or validating a Feature Spec |
+| `agentic-dev:confidence-protocol` | Agent confidence drops below 70% |
+| `agentic-dev:feature-spec` | Writing or reviewing a Feature Spec |
 | `agentic-dev:task-spec` | Creating or reviewing Task Spec sub-issues |
 | `agentic-dev:ac-validator` | Writing or checking acceptance criteria |
 | `agentic-dev:codebase-patterns` | Any worker begins implementation |
@@ -82,104 +113,92 @@ claude plugin install agentic-dev@your-org --scope user      # personal, all pro
 
 ---
 
-## Agents (31 total)
+## 31 Agents
 
-**Business Analysis:** orchestrator, business-analyst, stakeholder-clarifier, feasibility-assessor  
-**Discovery:** requirements-researcher, codebase-researcher, external-api-researcher, competitive-researcher, tech-spike-agent  
-**Design:** pm-agent, prd-reviewer, ux-specification-agent, architecture-reviewer  
-**Decomposition:** lead-engineer-decompose, database-architect, api-contract-agent  
-**Implementation:** backend-worker, frontend-worker, database-worker, test-worker, infrastructure-worker, documentation-worker  
-**Validation:** lead-engineer-integrate, code-review-agent, security-review-agent, qa-agent  
-**Release & Ops:** release-manager, deployment-agent, smoke-test-agent, rollback-agent, retrospective-agent
+| Phase | Agents |
+|---|---|
+| Business Analysis | orchestrator, business-analyst, stakeholder-clarifier, feasibility-assessor |
+| Discovery | requirements-researcher, codebase-researcher, external-api-researcher, competitive-researcher, tech-spike-agent |
+| Design | pm-agent, prd-reviewer, ux-specification-agent, architecture-reviewer |
+| Decomposition | lead-engineer-decompose, database-architect, api-contract-agent |
+| Implementation | backend-worker, frontend-worker, database-worker, test-worker, infrastructure-worker, documentation-worker |
+| Validation | lead-engineer-integrate, code-review-agent, security-review-agent, qa-agent, performance-test-agent |
+| Release & Ops | release-manager, deployment-agent, smoke-test-agent, rollback-agent, retrospective-agent |
 
 ---
 
-## MCP Tools (agentic-dev-tools server)
+## MCP Tools
 
-| Tool | Called By |
+| Tool | Purpose |
 |---|---|
-| `validate_feature_spec` | PRD Reviewer — checks all 7 sections, AC language |
-| `check_ac_coverage` | Orchestrator (Gate 4) — AC union check |
-| `scaffold_feature_spec` | PM Agent — generates blank 7-section template |
-| `scaffold_task_spec` | Lead Engineer — generates blank Task Spec |
-| `validate_task_spec` | Lead Engineer — checks all required fields |
-| `log_pipeline_event` | All agents — writes telemetry to `.agentic-dev/telemetry/` |
+| `validate_feature_spec` | Checks all 7 sections, AC language testability |
+| `check_ac_coverage` | Verifies AC union across all Task Specs (Gate 4) |
+| `scaffold_feature_spec` | Generates blank 7-section template |
+| `scaffold_task_spec` | Generates blank Task Spec for a worker type |
+| `validate_task_spec` | Checks all required fields are complete |
+| `log_pipeline_event` | Writes telemetry to `.agentic-dev/telemetry/` |
 
 ---
 
 ## Hooks
 
-**PreToolUse → security-gate.sh** — Blocks before execution:
-- Direct pushes to protected branches (main, master, production, staging)
-- Force pushes
-- `rm -rf` on source directories
-- Writes to `.env` files
-- `DROP TABLE` / `TRUNCATE` against non-test databases
+**PreToolUse → security-gate.sh:** Blocks force pushes, direct pushes to protected branches,
+`rm -rf` on source dirs, writes to `.env` files, `DROP TABLE` on non-test databases.
 
-**PostToolUse → auto-format.sh** — Runs after every file write:
-- TypeScript/JS: Prettier + ESLint
-- Java: google-java-format (if installed)
-- Python: ruff or black
-- Go: gofmt
-- JSON/Markdown: Prettier
+**PostToolUse → auto-format.sh:** Auto-runs Prettier/ESLint (TS/JS), google-java-format (Java),
+ruff/black (Python), gofmt (Go) after every file write.
 
 ---
 
-## First-run checklist
+## Required Linear Labels
 
-- [ ] Copy `templates/CLAUDE.md` to your project root — fill in **every** section
-- [ ] Configure Linear: team key, all statuses (exact names), all labels
-- [ ] Verify Linear MCP connection is working
-- [ ] Run `claude --plugin-dir ./agentic-dev` and try `/agentic-dev:validate-spec ENG-1`
-- [ ] Run a test issue through the full pipeline before using on production work
+Create all of these before running the pipeline:
+
+**Signal:** `agent-generated`, `needs-pm`, `spec-incomplete`  
+**Phase:** `prd-approved`, `architecture-review`, `security-reviewed`, `performance-reviewed`, `deployed-staging`, `deployed-production`, `incident`, `retrospective`  
+**Work type:** `backend`, `frontend`, `db`, `tests`, `infrastructure`, `docs`  
+**Issue type:** `Feature`, `Bug`, `Maintenance`
 
 ---
 
-## Plugin structure
+## Repository Structure
 
 ```
-agentic-dev/
+agentic-dev/                           ← Marketplace root (GitHub repo)
 ├── .claude-plugin/
-│   └── plugin.json          ← Plugin manifest
-├── commands/                ← Slash commands (/agentic-dev:run-pipeline etc.)
-│   ├── run-pipeline.md
-│   ├── write-spec.md
-│   ├── decompose-issue.md
-│   ├── review-pr.md
-│   ├── validate-spec.md
-│   └── run-retrospective.md
-├── agents/                  ← 31 agent definitions (auto-discovered)
-│   └── *.md
-├── skills/                  ← 7 Agent Skills with SKILL.md (auto-invoked)
-│   ├── confidence-protocol/
-│   ├── feature-spec/
-│   ├── task-spec/
-│   ├── ac-validator/
-│   ├── codebase-patterns/
-│   ├── git-workflow/
-│   └── linear-comment-format/
-├── hooks/
-│   ├── hooks.json           ← Hook configuration
-│   └── scripts/
-│       ├── security-gate.sh
-│       └── auto-format.sh
-├── server/
-│   └── index.js             ← MCP server (6 tools)
-├── .mcp.json                ← Registers the MCP server
-└── templates/
-    ├── CLAUDE.md            ← Constitution template — copy to project root
-    ├── FEATURE_SPEC.md      ← L2 Feature Spec template
-    └── TASK_SPEC.md         ← L3 Task Spec template
+│   ├── plugin.json                    ← Standalone plugin manifest
+│   └── marketplace.json               ← Marketplace catalog
+│
+├── plugins/
+│   └── agentic-dev/                   ← The installable plugin (pluginRoot: "./plugins")
+│       ├── .claude-plugin/
+│       │   └── plugin.json            ← Plugin manifest (no version — set in marketplace.json)
+│       ├── .mcp.json                  ← MCP server registration
+│       ├── agents/                    ← 31 agent definitions
+│       ├── commands/                  ← 6 slash commands
+│       ├── skills/                    ← 7 Agent Skills
+│       ├── hooks/
+│       │   ├── hooks.json
+│       │   └── scripts/
+│       ├── server/
+│       │   └── index.js               ← MCP server (6 tools)
+│       └── templates/
+│           ├── CLAUDE.md
+│           ├── FEATURE_SPEC.md
+│           └── TASK_SPEC.md
+│
+├── docs/
+│   └── team-settings-example.json     ← Copy to project .claude/settings.json
+├── README.md
+└── setup-repo.sh
 ```
 
 ---
 
-## Submit to Anthropic marketplace
+## Submit to Anthropic Marketplace
 
-Once the plugin is published to a public GitHub repo:
-
-- **Claude.ai**: [claude.ai/settings/plugins/submit](https://claude.ai/settings/plugins/submit)
-- **Console**: [platform.claude.com/plugins/submit](https://platform.claude.com/plugins/submit)
+- **Claude.ai:** [claude.ai/settings/plugins/submit](https://claude.ai/settings/plugins/submit)
+- **Console:** [platform.claude.com/plugins/submit](https://platform.claude.com/plugins/submit)
 
 ---
 
