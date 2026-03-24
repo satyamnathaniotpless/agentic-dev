@@ -1,4 +1,5 @@
 ---
+name: task-spec
 description: >
   The Task Spec template for sub-issues. Auto-activates when the Lead Engineer
   creates sub-issues or when any agent reviews a Task Spec for completeness.

@@ -1,4 +1,5 @@
 ---
+name: confidence-protocol
 description: >
   The universal escalation protocol. Auto-activates whenever any agent's
   confidence on a specific decision drops below 70%. Ensures agents stop

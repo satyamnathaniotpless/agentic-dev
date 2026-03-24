@@ -1,4 +1,5 @@
 ---
+name: ac-validator
 description: >
   Validates that acceptance criteria meet the testability standard.
   Auto-activates when PM Agent writes ACs, when PRD Reviewer reviews ACs,

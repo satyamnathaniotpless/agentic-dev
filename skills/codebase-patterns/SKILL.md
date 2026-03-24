@@ -1,4 +1,5 @@
 ---
+name: codebase-patterns
 description: >
   Ensures agents read existing code before writing new code, follow established
   patterns, and do not create inconsistencies. Auto-activates when any worker

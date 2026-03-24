@@ -1,4 +1,5 @@
 ---
+name: git-workflow
 description: >
   Branch naming, commit format, and merge order conventions for all worker agents.
   Auto-activates when any worker agent creates a branch, commits, or pushes code.

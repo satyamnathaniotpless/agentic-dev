@@ -1,4 +1,5 @@
 ---
+name: feature-spec
 description: >
   The 7-section Feature Spec template with validation rules for each section.
   Auto-activates when the PM Agent writes a PRD or when a user asks to write

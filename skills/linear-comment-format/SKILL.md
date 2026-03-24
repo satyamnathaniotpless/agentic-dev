@@ -1,4 +1,5 @@
 ---
+name: linear-comment-format
 description: >
   Standardised Linear comment format used by all agents. Auto-activates whenever
   any agent posts a completion comment or status update to a Linear issue. Ensures
